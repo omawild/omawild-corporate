@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Omawild Corporate Narrative</title>
+  
+  <!-- Favicon Asset Injections -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
   <style>
     /* -------------------------------------------------------------
        CORE ENGINE STYLES 
@@ -43,7 +50,25 @@
       z-index: 1000; 
       background: transparent; 
     }
-    .corp-logo { font-size: 18px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: #121212; transition: color 0.2s; z-index: 1002; }
+    
+    /* Global Dynamic SVG Logo Implementation */
+    .corp-logo { 
+      display: flex;
+      align-items: center;
+      text-decoration: none; 
+      z-index: 1002; 
+    }
+    .corp-logo svg {
+      width: auto;
+      height: 18px; 
+      display: block;
+      fill: #121212; 
+      transition: fill 0.2s ease;
+    }
+    
+    /* Dynamic Theme Support for SVG Logo */
+    .theme-light .corp-logo svg { fill: #121212; }
+    .theme-dark .corp-logo svg { fill: #ffffff; }
     
     .corp-nav { display: flex; align-items: center; gap: 32px; }
     .corp-nav-link { font-size: 14px; font-weight: 500; text-decoration: none; color: #121212; opacity: 0.8; transition: all 0.2s; }
@@ -52,9 +77,9 @@
     .corp-cta:hover { background: var(--brand-orange, #E15A27); border-color: var(--brand-orange, #E15A27); color: #ffffff; }
 
     /* Mobile Header Action Grouping */
-    .mobile-header-actions { display: none; align-items: center; width: 100%; height: 100%; z-index: 1002; position: relative; }
+    .mobile-header-actions { display: none; align-items: center; width: 100%; height: 100%; z-index: 1002; position: absolute; left: 0; top: 0; }
     
-    /* Center-aligned Page Indicator (Perfect Viewport Centering) */
+    /* Universal Viewport Centered Counter Fix */
     .mobile-slide-counter {
       position: absolute;
       left: 50%;
@@ -69,6 +94,7 @@
       margin: 0;
       white-space: nowrap;
       z-index: 1003;
+      transition: all 0.2s ease;
     }
     .mobile-slide-counter .active-digit {
       color: var(--brand-orange, #E15A27);
@@ -77,12 +103,13 @@
     /* Right-aligned Actions Container */
     .mobile-actions-right {
       margin-left: auto;
+      margin-right: 20px;
       display: flex;
       align-items: center;
       gap: 16px;
       z-index: 1002;
     }
-    .mobile-pinned-cta { display: inline-block; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1.5px solid #121212; color: #121212; border-radius: 50px; transition: all 0.2s; }
+    .mobile-pinned-cta { display: inline-block; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1.5px solid #121212; color: #121212; border-radius: 50px; transition: all 0.2s; white-space: nowrap; }
     .mobile-pinned-cta:hover { background: var(--brand-orange, #E15A27); border-color: var(--brand-orange, #E15A27); color: #ffffff; }
 
     /* Mobile Hamburger Trigger */
@@ -168,7 +195,7 @@
     
     .caption-footer-para { max-width: 680px; text-align: center; font-size: 14px; line-height: 1.45; opacity: 0.8; margin-top: 28px; font-weight: 400; }
 
-    /* Fixed Centering: Avoids 'transform' which gets overwritten by fade-el */
+    /* Fixed Centering */
     .bottom-scroll-hint { 
       position: absolute; 
       bottom: 35px; 
@@ -189,7 +216,7 @@
       z-index: 10; 
     }
 
-    /* Layout System 005: File Tab UI - Integrated directly into flow to prevent massive gaps */
+    /* Layout System 005: File Tab UI */
     .expression-showcase-wrap { width: 100%; max-width: 800px; display: flex; flex-direction: column; position: relative; margin-top: 20px; }
     .expression-tabs-row { display: flex; gap: 6px; margin-bottom: -1px; z-index: 1; position: relative; align-items: flex-end; }
     
@@ -244,11 +271,35 @@
     .expr-divider { width: 100%; height: 1px; background: rgba(18, 18, 18, 0.15); margin-bottom: 20px; }
     .expr-footer-note { font-size: 12px; font-weight: 500; opacity: 0.7; color: #121212; }
 
-    /* Layout System 006: Cozy Timeline Cards */
-    .history-timeline-outer { width: 100vw; display: flex; flex-direction: column; align-items: center; position: relative; margin-top: 32px; }
-    .history-timeline-container { display: flex; gap: 20px; width: 100%; padding: 10px 80px 30px 80px; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    /* -------------------------------------------------------------
+       FIXED: PREMIUM SLIDER ALIGNMENT SYSTEM
+    ---------------------------------------------------------------- */
+    .history-timeline-outer { 
+      width: 100%; 
+      display: flex; 
+      flex-direction: column; 
+      position: relative; 
+      margin-top: 32px; 
+    }
+    
+    .history-timeline-container { 
+      display: flex; 
+      width: 100%; 
+      padding: 10px 0 30px 0; /* Clean vertical safety margins */
+      justify-content: flex-start; 
+      overflow-x: auto; 
+      scrollbar-width: none; 
+      scroll-snap-type: x mandatory; 
+      -webkit-overflow-scrolling: touch; 
+    }
     .history-timeline-container::-webkit-scrollbar { display: none; }
     
+    /* Visual spacer mechanics to emulate a true padding bounding-box */
+    .timeline-slider-spacer {
+      flex: 0 0 110px; /* Aligns first card perfectly to text flow grid */
+      width: 110px;
+    }
+
     .timeline-column-card { 
       flex: 0 0 240px; 
       background-color: #F7F5F0; 
@@ -257,8 +308,13 @@
       display: flex; 
       flex-direction: column; 
       box-shadow: 0 4px 20px rgba(0,0,0,0.01); 
-      scroll-snap-align: center; 
+      scroll-snap-align: start; 
+      margin-right: 20px; /* Card gap strategy */
     }
+    .timeline-column-card:last-of-type {
+      margin-right: 0;
+    }
+
     .timeline-card-image-wrapper { 
       width: 100%; 
       aspect-ratio: 3 / 4; 
@@ -289,10 +345,9 @@
     .fc-eyebrow { font-size: 14px; font-weight: 500; color: #666; margin-bottom: 24px; }
     .fc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .fc-label { font-size: 16px; font-weight: 600; color: #121212; }
-    .fc-value { font-size: 16px; font-weight: 600; color: #121212; }
+    .fc-value { font-size: 16px; font-weight: 700; color: var(--brand-orange, #E15A27); }
     
     .fc-slider-input { -webkit-appearance: none; width: 100%; height: 4px; background: #e0e0e0; border-radius: 2px; outline: none; margin-bottom: 28px; transition: background 0.2s; }
-    
     .fc-slider-input::-webkit-slider-thumb { 
       -webkit-appearance: none; 
       appearance: none; 
@@ -306,7 +361,6 @@
     .fc-slider-input::-webkit-slider-thumb:hover { transform: scale(1.15); }
     
     .fc-description { font-size: 13.5px; line-height: 1.4; color: #555; margin-bottom: 32px; border-bottom: 1px solid #EAE8E3; padding-bottom: 32px; }
-    
     .fc-output-num { 
       font-size: 64px; 
       font-weight: 700; 
@@ -350,8 +404,8 @@
       flex-direction: column; 
       width: 100%; 
       box-shadow: 0 4px 24px rgba(0,0,0,0.01); 
-      align-items: flex-start; /* Corrected alignment */
-      text-align: left; /* Corrected alignment */
+      align-items: flex-start; 
+      text-align: left; 
     }
     .display-header-title { font-size: 26px; font-weight: 700; color: #121212; margin-bottom: 14px; line-height: 1.25; text-align: left; }
     .display-body-para { font-size: 14.5px; line-height: 1.5; color: #444444; margin-bottom: 22px; text-align: left; }
@@ -381,7 +435,6 @@
         align-items: center;
       }
       .timeline-progress-sidebar { display: none; }
-      
       .mobile-progress-container { display: block; }
       
       .corp-header { 
@@ -395,8 +448,6 @@
         background: transparent;
       }
       .corp-nav { display: none; }
-      .corp-logo { font-size: 16px; }
-      
       .mobile-header-actions { 
         display: flex; 
         width: 100%; 
@@ -405,11 +456,6 @@
         position: absolute;
         left: 0;
         top: 0;
-        padding: 0 20px;
-        pointer-events: none;
-      }
-      .mobile-header-actions * {
-        pointer-events: auto;
       }
 
       .mobile-slide-counter {
@@ -418,9 +464,6 @@
         top: 50%;
         transform: translate(-50%, -50%);
         font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        margin: 0;
       }
 
       .mobile-hamburger { display: flex; }
@@ -435,13 +478,8 @@
       .eyebrow { margin-bottom: 14px; }
       .embedded-layout-asset { max-width: 100%; height: 220px; margin-top: 16px; }
       
-      #slide-sec-2 .headline-large {
-        font-size: 32px !important;
-      }
-
-      #slide-sec-6 .headline-large {
-        font-size: 26px !important;
-      }
+      #slide-sec-2 .headline-large { font-size: 32px !important; }
+      #slide-sec-6 .headline-large { font-size: 26px !important; }
 
       .centered-narrative-inner {
         margin: auto 0;
@@ -463,25 +501,30 @@
       .expr-divider { margin-bottom: 14px; }
       
       .history-timeline-outer { margin-top: 20px; }
-      .history-timeline-container { padding: 10px 24px 20px 24px; gap: 16px; justify-content: flex-start; }
-      .timeline-column-card { flex: 0 0 190px; border-radius: 12px; padding: 8px; }
+      
+      /* Mobile Adaptive Spacer Mapping */
+      .timeline-slider-spacer {
+        flex: 0 0 24px;
+        width: 24px;
+      }
+      .timeline-column-card { flex: 0 0 190px; border-radius: 12px; padding: 8px; margin-right: 16px; }
       .timeline-card-image-wrapper { margin-bottom: 8px; }
       .timeline-card-caption { font-size: 11.5px; }
       
-      .forecasting-split-layout { flex-direction: column; gap: 24px; padding: 0; margin: auto 0; align-items: flex-start; }
+      .forecasting-split-layout { flex-direction: column; gap: 12px; padding: 0; margin: auto 0; align-items: flex-start; }
       .forecast-left-content { width: 100%; text-align: left; }
-      .forecast-left-content .headline-large { font-size: 28px; }
+      .forecast-left-content .headline-large { font-size: 28px; margin-bottom: 8px; }
       .forecast-right-card { width: 100%; padding: 20px; border-radius: 20px; text-align: left; }
-      .fc-eyebrow { margin-bottom: 16px; }
-      .fc-description { margin-bottom: 20px; padding-bottom: 20px; }
+      .fc-eyebrow { margin-bottom: 14px; }
+      .fc-description { margin-bottom: 16px; padding-bottom: 16px; }
       .fc-output-num { font-size: 48px; }
       
       .partnership-header-container { max-width: 100%; align-items: flex-start; text-align: left; margin-top: auto; }
-      .partnership-header-container .eyebrow { margin-bottom: 8px; }
-      .partnership-header-container .headline-large { font-size: 26px; text-align: left; margin-bottom: 8px; }
-      .partnership-header-container .body-lead { text-align: left; font-size: 14px; }
-      .partnership-stack-container { max-width: 100%; margin-top: 10px; margin-bottom: auto; align-items: flex-start; text-align: left; }
-      .partnership-pills-row { width: calc(100% + 48px); margin-left: -24px; padding: 0 24px; gap: 8px; margin-bottom: 12px; justify-content: flex-start; }
+      .partnership-header-container .eyebrow { margin-bottom: 6px; }
+      .partnership-header-container .headline-large { font-size: 26px !important; text-align: left; margin-bottom: 6px; }
+      .partnership-header-container .body-lead { text-align: left; font-size: 14px; margin-bottom: 8px !important; }
+      .partnership-stack-container { max-width: 100%; margin-top: 4px; margin-bottom: auto; align-items: flex-start; text-align: left; }
+      .partnership-pills-row { width: calc(100% + 48px); margin-left: -24px; padding: 0 24px; gap: 8px; margin-bottom: 10px; justify-content: flex-start; }
       
       .pill-item-btn { padding: 8px 16px; font-size: 12.5px; }
       .partnership-compact-card { padding: 20px; border-radius: 16px; align-items: flex-start; text-align: left; }
@@ -501,29 +544,39 @@
         font-size: 10px;
       }
     }
+
+    @media (max-width: 440px) {
+      .mobile-slide-counter {
+        position: absolute;
+        left: auto;
+        right: 20px;
+        top: 56px;
+        transform: none;
+        font-size: 10px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- APP LAYOUT STRUCTURAL INJECTIONS -->
   <div class="mobile-progress-container">
     <div class="mobile-progress-bar" id="mobile-progress-indicator"></div>
   </div>
 
   <header class="corp-header interactive-safe-zone" onclick="event.stopPropagation();">
-    <a href="https://omawild.com/" class="corp-logo" id="inject-logo"></a>
+    <a href="https://omawild.com/" class="corp-logo" id="inject-logo">
+      <svg viewBox="0 0 140 24" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="18" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-weight="bold" font-size="16" letter-spacing="2">OMAWILD</text>
+      </svg>
+    </a>
     
-    <!-- Desktop Navigation -->
     <nav class="corp-nav" id="inject-nav"></nav>
     
-    <!-- Mobile Navigation Actions Grid -->
     <div class="mobile-header-actions">
-      <!-- Centered page counter tracking (Locked absolutely in viewport center) -->
       <span class="mobile-slide-counter" id="mobile-slide-counter">
         <span class="active-digit">01</span> / 09
       </span>
       
-      <!-- Actions explicitly aligned on the right end of Header -->
       <div class="mobile-actions-right">
         <a href="mailto:partners@omawild.com" class="mobile-pinned-cta">Become a Partner</a>
         <button class="mobile-hamburger" id="hamburger-btn">
@@ -535,7 +588,6 @@
     </div>
   </header>
 
-  <!-- Mobile Dropdown/Drawer Menu -->
   <div class="mobile-menu-drawer interactive-safe-zone" id="mobile-drawer" onclick="event.stopPropagation();">
     <button class="drawer-close-btn" id="drawer-close-btn">
       <span>✕</span> Close
@@ -550,7 +602,6 @@
 
   <!-- RUNTIME RENDER ENGINE -->
   <script>
-    // --- 1. GLOBAL SITE DATA OBJECT DEFINITION ---
     const SITE_DATA = {
       globalBrand: {
         logoText: "Omawild",
@@ -650,7 +701,6 @@
         textColor: "#121212",
         eyebrow: "How It All Began",
         headline: "Our story began in the landscapes that inspired our mission to restore nature",
-        scrollHintText: "Follow our mission",
         timeline: [
           {
             caption: "Secured initial preservation agreements covering 5,000 hectares of primary ecosystems.",
@@ -765,7 +815,7 @@
           {
             id: "cobranded-impact",
             pillLabel: "Co-Branded Impact",
-            displayTitle: "Co-Branded Preservation Initiatives",
+            displayTitle: "Co-Branded Impact Campaigns",
             displayBody: "Unlock large-scale environmental impact by aligning your brand's voice directly with ecosystem restoration. Through strategic co-branding campaigns, we co-fund critical agroforestry projects, providing your brand with high-fidelity, auditable marketing materials and interactive impact transparency matrices.",
             bullets: [
               "Auditable restoration impact metrics",
@@ -778,12 +828,10 @@
       }
     };
 
-    // --- 2. RUNTIME ENGINE INJECTIONS ---
+    // --- RUNTIME ENGINE INJECTIONS ---
     document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.style.setProperty('--brand-orange', SITE_DATA.globalBrand.signatureOrange);
 
-      // Setup Global Branding
-      document.getElementById('inject-logo').textContent = SITE_DATA.globalBrand.logoText;
       const navContainer = document.getElementById('inject-nav');
       const mobileDrawer = document.getElementById('mobile-drawer');
 
@@ -869,7 +917,7 @@
       // --- 001: Side-By-Side Canvas ---
       const d1 = SITE_DATA.section001;
       const s1 = document.createElement('section');
-      s1.className = 'narrative-section bleed-split-section is-active';
+      s1.className = 'narrative-section bleed-split-section is-active theme-light';
       s1.style.padding = '0'; 
       s1.innerHTML = `
         <div class="bleed-split-grid" style="color: ${d1.textColor}">
@@ -901,7 +949,7 @@
       // --- 002: Centered Minimal Statement ---
       const d2 = SITE_DATA.section002;
       const s2 = document.createElement('section');
-      s2.className = 'narrative-section';
+      s2.className = 'narrative-section theme-light';
       s2.id = 'slide-sec-2';
       s2.innerHTML = `
         <div class="centered-narrative-inner" style="color: ${d2.textColor}; max-width: 700px;">
@@ -920,7 +968,7 @@
       // --- 003: Text + Embedded Central Diagram ---
       const d3 = SITE_DATA.section003;
       const s3 = document.createElement('section');
-      s3.className = 'narrative-section';
+      s3.className = 'narrative-section theme-light';
       s3.innerHTML = `
         <div class="centered-narrative-inner" style="color: ${d3.textColor}; max-width: 800px;">
           <p class="fade-el eyebrow delay-1">${d3.eyebrow}</p>
@@ -934,7 +982,7 @@
       // --- 004: Canopy Ecosystem Section ---
       const d4 = SITE_DATA.section004;
       const s4 = document.createElement('section');
-      s4.className = 'narrative-section';
+      s4.className = 'narrative-section theme-light';
       s4.innerHTML = `
         <div class="centered-narrative-inner" style="color: ${d4.textColor}; max-width: 800px;">
           <p class="fade-el eyebrow delay-1">${d4.eyebrow}</p>
@@ -949,7 +997,7 @@
       // --- 005: Custom Product Expressions Tab Showcase ---
       const d5 = SITE_DATA.section005;
       const s5 = document.createElement('section');
-      s5.className = 'narrative-section';
+      s5.className = 'narrative-section theme-light';
       
       let tabsHtml = '';
       let cardsHtml = '';
@@ -1022,10 +1070,10 @@
         });
       });
 
-      // --- 006: Cozy Compact Portrait Card Timeline ---
+      // --- 006: Cozy Compact Portrait Card Timeline (With Premium Spacers Fixed) ---
       const d6 = SITE_DATA.section006;
       const s6 = document.createElement('section');
-      s6.className = 'narrative-section';
+      s6.className = 'narrative-section theme-light';
       s6.id = 'slide-sec-6';
       s6.style.paddingLeft = '0';
       s6.style.paddingRight = '0';
@@ -1038,34 +1086,56 @@
             <div class="timeline-card-image-wrapper">
               <img class="timeline-card-image" src="${item.imageUrl}" alt="Timeline Moment">
             </div>
-            <p class="timeline-card-caption">${item.caption}</p>
+            <p class="timeline-column-card timeline-card-caption" style="background:transparent; padding:0; box-shadow:none; flex:none; margin:0;">${item.caption}</p>
           </div>
         `;
       });
 
       s6.innerHTML = `
-        <div class="centered-narrative-inner" style="max-width: 900px; color: ${d6.textColor}; padding: 0 40px; margin: 0 auto;">
+        <div class="centered-narrative-inner" style="max-width: 900px; color: ${d6.textColor}; padding: 0 110px; margin: 0; align-items: flex-start; text-align: left;">
           <p class="fade-el eyebrow delay-1" style="margin-bottom: 24px;">${d6.eyebrow}</p>
-          <h1 class="fade-el headline-large delay-2" style="max-width: 100%; margin-bottom: 0;">${d6.headline}</h1>
-          
-          <div class="history-timeline-outer">
-            <div class="history-timeline-container fade-el delay-3 interactive-safe-zone" onclick="event.stopPropagation();" style="padding-left: 0; padding-right: 0;">
-              ${timelineCardsHtml}
-            </div>
-          </div>
+          <h1 class="fade-el headline-large delay-2" style="max-width: 100%; margin-bottom: 0; text-align: left;">${d6.headline}</h1>
         </div>
-        <div class="bottom-scroll-hint fade-el delay-4" style="color: ${d6.textColor}">
-          <span>${d6.scrollHintText}</span>
-          <span style="color: var(--brand-orange)">↓</span>
+        
+        <div class="history-timeline-outer">
+          <div class="history-timeline-container fade-el delay-3 interactive-safe-zone" onclick="event.stopPropagation();">
+            <!-- Invisible structural spacers lock down perfect padding behaviors across viewports -->
+            <div class="timeline-slider-spacer"></div>
+            ${timelineCardsHtml}
+            <div class="timeline-slider-spacer"></div>
+          </div>
         </div>
       `;
       scroller.appendChild(s6);
       appendDot(5);
 
+      // Add a dynamic breakpoint resize controller to ensure header match grids sync correctly across large displays
+      const adjustTimelineSpacerWidths = () => {
+        const textContainer = s6.querySelector('.centered-narrative-inner');
+        if (textContainer && window.innerWidth > 968) {
+          const computedGutterWidth = textContainer.getBoundingClientRect().left;
+          document.querySelectorAll('.timeline-slider-spacer').forEach(spacer => {
+            spacer.style.flex = `0 0 ${computedGutterWidth}px`;
+            spacer.style.width = `${computedGutterWidth}px`;
+          });
+          textContainer.style.paddingLeft = '0';
+          textContainer.style.paddingRight = '0';
+        } else if(textContainer) {
+          document.querySelectorAll('.timeline-slider-spacer').forEach(spacer => {
+            spacer.style.flex = `0 0 24px`;
+            spacer.style.width = `24px`;
+          });
+          textContainer.style.paddingLeft = '24px';
+          textContainer.style.paddingRight = '24px';
+        }
+      };
+      window.addEventListener('resize', adjustTimelineSpacerWidths);
+      setTimeout(adjustTimelineSpacerWidths, 100);
+
       // --- 007: Conservation Pledge Call To Action ---
       const d7 = SITE_DATA.section007;
       const s7 = document.createElement('section');
-      s7.className = 'narrative-section';
+      s7.className = 'narrative-section theme-light';
       s7.innerHTML = `
         <div class="centered-narrative-inner slide-seven-width" style="color: ${d7.textColor}">
           <p class="fade-el eyebrow delay-1">${d7.eyebrow}</p>
@@ -1086,7 +1156,7 @@
       // --- 008: Active Forecasting Section ---
       const d8 = SITE_DATA.section008;
       const s8 = document.createElement('section');
-      s8.className = 'narrative-section';
+      s8.className = 'narrative-section theme-light';
       s8.innerHTML = `
         <div class="forecasting-split-layout">
           <div class="forecast-left-content">
@@ -1124,17 +1194,15 @@
         } else {
           labelVal.textContent = `${val} employees`;
         }
-        const computedImpact = val * 260; // Each employee drinking one cup/day, 5 days/wk, 52 wks/yr equals 260 opportunities per year.
+        const computedImpact = val * 260; 
         metricVal.textContent = computedImpact.toLocaleString();
       });
-
-      // Fire once to set initial state correctly
       slider.dispatchEvent(new Event('input'));
 
       // --- 009: Tailored Partnerships UI ---
       const d9 = SITE_DATA.section009;
       const s9 = document.createElement('section');
-      s9.className = 'narrative-section';
+      s9.className = 'narrative-section theme-light';
       
       let leftMenuHtml = '';
       d9.solutions.forEach((sol, index) => {
@@ -1148,7 +1216,7 @@
       s9.innerHTML = `
         <div class="partnership-header-container">
           <p class="fade-el eyebrow delay-1">${d9.eyebrow}</p>
-          <h1 class="fade-el headline-large delay-2" style="margin-bottom: 12px; font-weight: 800; font-size: 38px;">${d9.headline}</h1>
+          <h1 class="fade-el headline-large delay-2" style="margin-bottom: 12px; font-weight: 800;">${d9.headline}</h1>
           <p class="fade-el body-lead delay-3" style="font-size: 15px; margin-bottom: 14px;">${d9.body}</p>
         </div>
         
@@ -1156,7 +1224,6 @@
           <div class="partnership-pills-row">
             ${leftMenuHtml}
           </div>
-          
           <div class="partnership-compact-card" id="partnership-view-pane"></div>
         </div>
       `;
@@ -1184,7 +1251,6 @@
           </div>
         `;
       };
-
       renderActiveSolution(d9.solutions[0].id);
 
       document.querySelectorAll('.pill-item-btn').forEach(btn => {
@@ -1207,9 +1273,20 @@
           if (entry.isIntersecting) {
             sections.forEach(s => s.classList.remove('is-active'));
             entry.target.classList.add('is-active');
-            const cIdx = Array.from(sections).indexOf(entry.target);
             
-            // Update Desktop Dots Tracker
+            // Sync dynamic logo visibility styles across changes
+            const headerEl = document.querySelector('.corp-header');
+            if(headerEl) {
+              if(entry.target.classList.contains('theme-dark')) {
+                headerEl.classList.remove('theme-light');
+                headerEl.classList.add('theme-dark');
+              } else {
+                headerEl.classList.remove('theme-dark');
+                headerEl.classList.add('theme-light');
+              }
+            }
+            
+            const cIdx = Array.from(sections).indexOf(entry.target);
             timelineNodes.forEach((n, idx) => n.classList.toggle('is-current', idx === cIdx));
             
             // Update Mobile Progress Bar
@@ -1225,6 +1302,11 @@
               const slideNum = String(cIdx + 1).padStart(2, '0');
               const totalSlides = String(sections.length).padStart(2, '0');
               mobCounter.innerHTML = `<span class="active-digit">${slideNum}</span> / ${totalSlides}`;
+            }
+
+            // Fire dynamic layout resize alignment validation check specifically when shifting to slide index 6
+            if (cIdx === 5) {
+              adjustTimelineSpacerWidths();
             }
           }
         });
