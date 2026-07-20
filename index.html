@@ -1,1 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omawild Corporate Narrative</title>
+  <style>
+    /* -------------------------------------------------------------
+       CORE ENGINE STYLES 
+    ---------------------------------------------------------------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+    body, html { overflow: hidden; background-color: #ffffff; color: #121212; height: 100%; width: 100%; }
+    
+    /* Mobile Progress Bar */
+    .mobile-progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.05);
+      z-index: 1003;
+      display: none;
+    }
+    .mobile-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--brand-orange, #E15A27);
+      transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
 
+    /* Clean Minimal Floating Header & Mobile Menu */
+    .corp-header { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 80px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 0 40px; 
+      z-index: 1000; 
+      background: transparent; 
+    }
+    .corp-logo { font-size: 18px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: #121212; transition: color 0.2s; z-index: 1002; }
+    
+    .corp-nav { display: flex; align-items: center; gap: 32px; }
+    .corp-nav-link { font-size: 14px; font-weight: 500; text-decoration: none; color: #121212; opacity: 0.8; transition: all 0.2s; }
+    .corp-nav-link:hover { opacity: 1; color: var(--brand-orange, #E15A27); }
+    .corp-cta { padding: 10px 22px; border-radius: 50px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid #121212; color: #121212; transition: all 0.2s; z-index: 1002; }
+    .corp-cta:hover { background: var(--brand-orange, #E15A27); border-color: var(--brand-orange, #E15A27); color: #ffffff; }
+
+    /* Mobile Header Action Grouping */
+    .mobile-header-actions { display: none; align-items: center; width: 100%; height: 100%; z-index: 1002; position: relative; }
+    
+    /* Center-aligned Page Indicator (Perfect Viewport Centering) */
+    .mobile-slide-counter {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(18, 18, 18, 0.4);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.05em;
+      pointer-events: none;
+      margin: 0;
+      white-space: nowrap;
+      z-index: 1003;
+    }
+    .mobile-slide-counter .active-digit {
+      color: var(--brand-orange, #E15A27);
+    }
+
+    /* Right-aligned Actions Container */
+    .mobile-actions-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1002;
+    }
+    .mobile-pinned-cta { display: inline-block; padding: 10px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1.5px solid #121212; color: #121212; border-radius: 50px; transition: all 0.2s; }
+    .mobile-pinned-cta:hover { background: var(--brand-orange, #E15A27); border-color: var(--brand-orange, #E15A27); color: #ffffff; }
+
+    /* Mobile Hamburger Trigger */
+    .mobile-hamburger { display: none; background: none; border: none; flex-direction: column; justify-content: space-between; width: 22px; height: 15px; cursor: pointer; }
+    .mobile-hamburger span { display: block; width: 100%; height: 2px; background-color: #121212; transition: all 0.3s ease; }
+    .mobile-hamburger.is-active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .mobile-hamburger.is-active span:nth-child(2) { opacity: 0; }
+    .mobile-hamburger.is-active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* Mobile Slide-out Drawer */
+    .mobile-menu-drawer { display: none; position: fixed; top: 0; right: -100%; width: 300px; height: 100vh; height: 100dvh; background: #ffffff; box-shadow: -10px 0 30px rgba(0,0,0,0.05); z-index: 1001; transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1); padding: 100px 32px 40px 32px; flex-direction: column; gap: 24px; }
+    .mobile-menu-drawer.is-active { right: 0; display: flex; }
+    
+    /* Drawer Close Indicator */
+    .drawer-close-btn { position: absolute; top: 24px; right: 24px; background: none; border: none; font-size: 14px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #121212; cursor: pointer; display: flex; align-items: center; gap: 6px; opacity: 0.7; transition: opacity 0.2s; }
+    .drawer-close-btn:hover { opacity: 1; }
+
+    /* Left Sidebar Dots Navigation */
+    .timeline-progress-sidebar { position: fixed; left: 30px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; z-index: 100; }
+    .timeline-dot-track { display: flex; flex-direction: column; align-items: center; gap: 20px; cursor: pointer; }
+    .timeline-node { width: 8px; height: 8px; border-radius: 50%; background: rgba(0, 0, 0, 0.15); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+    .timeline-node.is-current { background: var(--brand-orange, #E15A27); transform: scale(1.4); }
+
+    /* Scroll Engine Container */
+    .narrative-wrapper { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; height: 100dvh; width: 100vw; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .narrative-wrapper::-webkit-scrollbar { display: none; }
+    
+    /* Base Section Design with Flexible Content Centering */
+    .narrative-section { position: relative; width: 100vw; height: 100vh; height: 100dvh; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 80px; cursor: pointer; background-color: #ffffff !important; }
+    
+    /* Reveal Transition Animation Engine */
+    .fade-el { opacity: 0; transform: translateY(20px); transition: opacity 0.9s cubic-bezier(0.25, 1, 0.5, 1), transform 0.9s cubic-bezier(0.25, 1, 0.5, 1); }
+    .narrative-section.is-active .fade-el { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.22s; }
+    .delay-3 { transition-delay: 0.35s; }
+    .delay-4 { transition-delay: 0.48s; }
+
+    /* Global Typography Foundations */
+    .eyebrow { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 24px; font-weight: 600; opacity: 0.7; }
+    
+    /* Premium Sans-Serif Headers */
+    .headline-large { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 44px; font-weight: 800; line-height: 1.15; margin-bottom: 24px; color: #121212; }
+    
+    /* Tightened Premium Body Spacings */
+    .body-lead { font-size: 15px; line-height: 1.45; opacity: 0.7; color: #121212; font-weight: 400; }
+    
+    /* Standardized Button Style */
+    .btn-unified { 
+      display: inline-block; 
+      padding: 14px 28px; 
+      border-radius: 50px; 
+      text-decoration: none; 
+      font-weight: 600; 
+      font-size: 13.5px; 
+      background-color: #ffffff;
+      border: 2px solid var(--brand-orange, #E15A27);
+      color: var(--brand-orange, #E15A27);
+      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1); 
+      cursor: pointer;
+    }
+    .btn-unified:hover { 
+      background-color: var(--brand-orange, #E15A27);
+      color: #ffffff;
+    }
+    
+    /* Layout System 001: Split Screen Welcome */
+    .bleed-split-grid { display: flex; width: 100vw; height: 100vh; height: 100dvh; }
+    .split-text-pane { width: 50%; flex: 0 0 50%; display: flex; flex-direction: column; justify-content: center; padding: 0 8% 0 10%; }
+    .split-media-pane { width: 50%; flex: 0 0 50%; position: relative; overflow: hidden; }
+    .bleed-img-element { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Layout Systems: Centered Copy Formations with Adjustable Max-Widths */
+    .centered-narrative-inner { max-width: 680px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: auto 0; }
+    
+    /* Specific Constraint for Slide 7 Content Width */
+    .centered-narrative-inner.slide-seven-width {
+      max-width: 850px;
+    }
+
+    /* Fixed Image Sizing Constraint for Slides 3 and 4 */
+    .embedded-layout-asset { width: 100%; max-width: 620px; height: 340px; border-radius: 4px; margin-top: 32px; object-fit: cover; }
+    
+    .caption-footer-para { max-width: 680px; text-align: center; font-size: 14px; line-height: 1.45; opacity: 0.8; margin-top: 28px; font-weight: 400; }
+
+    /* Fixed Centering: Avoids 'transform' which gets overwritten by fade-el */
+    .bottom-scroll-hint { 
+      position: absolute; 
+      bottom: 35px; 
+      left: 0; 
+      right: 0;
+      margin: 0 auto;
+      width: max-content;
+      text-align: center; 
+      font-size: 11px; 
+      text-transform: uppercase; 
+      letter-spacing: 0.1em; 
+      font-weight: 500; 
+      opacity: 0.6; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 8px; 
+      z-index: 10; 
+    }
+
+    /* Layout System 005: File Tab UI - Integrated directly into flow to prevent massive gaps */
+    .expression-showcase-wrap { width: 100%; max-width: 800px; display: flex; flex-direction: column; position: relative; margin-top: 20px; }
+    .expression-tabs-row { display: flex; gap: 6px; margin-bottom: -1px; z-index: 1; position: relative; align-items: flex-end; }
+    
+    .tab-btn { 
+      padding: 14px 24px; 
+      border-radius: 14px 14px 0 0; 
+      border: none; 
+      font-size: 11px; 
+      font-weight: 700; 
+      letter-spacing: 0.05em; 
+      text-transform: uppercase; 
+      cursor: pointer; 
+      transition: all 0.2s ease-in-out; 
+      margin-bottom: -1px; 
+      position: relative; 
+      z-index: 1; 
+    }
+    
+    .expression-main-card { 
+      display: flex; 
+      border-radius: 0 20px 20px 20px; 
+      padding: 28px; 
+      gap: 36px; 
+      align-items: center; 
+      min-height: 320px; 
+      position: relative; 
+      z-index: 2; 
+      background-color: #F7F5F0; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    }
+    
+    .expression-left-graphic { 
+      width: 32%; 
+      flex: 0 0 32%; 
+      max-width: 240px; 
+      border-radius: 12px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      aspect-ratio: 1 / 1; 
+      overflow: hidden; 
+      position: relative; 
+      padding: 0; 
+    }
+    .expression-prod-img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .expression-right-details { width: 68%; display: flex; flex-direction: column; color: #121212; text-align: left; }
+    .expr-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; opacity: 0.7; color: #121212; }
+    .expr-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 4px; line-height: 1.15; color: #121212; }
+    .expr-sub { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; opacity: 0.6; color: #121212; }
+    .expr-desc { font-size: 14px; line-height: 1.5; margin-bottom: 24px; opacity: 0.8; font-weight: 400; color: #222222; }
+    .expr-divider { width: 100%; height: 1px; background: rgba(18, 18, 18, 0.15); margin-bottom: 20px; }
+    .expr-footer-note { font-size: 12px; font-weight: 500; opacity: 0.7; color: #121212; }
+
+    /* Layout System 006: Cozy Timeline Cards */
+    .history-timeline-outer { width: 100vw; display: flex; flex-direction: column; align-items: center; position: relative; margin-top: 32px; }
+    .history-timeline-container { display: flex; gap: 20px; width: 100%; padding: 10px 80px 30px 80px; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .history-timeline-container::-webkit-scrollbar { display: none; }
+    
+    .timeline-column-card { 
+      flex: 0 0 240px; 
+      background-color: #F7F5F0; 
+      border-radius: 16px; 
+      padding: 10px; 
+      display: flex; 
+      flex-direction: column; 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.01); 
+      scroll-snap-align: center; 
+    }
+    .timeline-card-image-wrapper { 
+      width: 100%; 
+      aspect-ratio: 3 / 4; 
+      border-radius: 10px; 
+      background-color: #E2DDD5; 
+      overflow: hidden; 
+      margin-bottom: 10px; 
+    }
+    .timeline-card-image { width: 100%; height: 100%; object-fit: cover; }
+    .timeline-card-caption { font-size: 13px; line-height: 1.4; color: #222222; font-weight: 400; opacity: 0.9; text-align: left; }
+
+    /* Layout System 008: Sand Forecasting Panel */
+    .forecasting-split-layout { display: flex; width: 100%; max-width: 1040px; align-items: center; gap: 64px; justify-content: space-between; padding: 0 40px; margin: auto 0; }
+    .forecast-left-content { width: 50%; text-align: left; }
+    .forecast-left-content .headline-large { font-size: 46px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 800; line-height: 1.15; }
+    
+    .forecast-right-card { 
+      width: 440px; 
+      background: #F7F5F0; 
+      border-radius: 28px; 
+      padding: 40px; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.02); 
+      border: 1px solid #EAE8E3; 
+      display: flex; 
+      flex-direction: column; 
+      text-align: left; 
+    }
+    .fc-eyebrow { font-size: 14px; font-weight: 500; color: #666; margin-bottom: 24px; }
+    .fc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .fc-label { font-size: 16px; font-weight: 600; color: #121212; }
+    .fc-value { font-size: 16px; font-weight: 600; color: #121212; }
+    
+    .fc-slider-input { -webkit-appearance: none; width: 100%; height: 4px; background: #e0e0e0; border-radius: 2px; outline: none; margin-bottom: 28px; transition: background 0.2s; }
+    
+    .fc-slider-input::-webkit-slider-thumb { 
+      -webkit-appearance: none; 
+      appearance: none; 
+      width: 20px; 
+      height: 20px; 
+      border-radius: 50%; 
+      background: var(--brand-orange, #E15A27); 
+      cursor: pointer; 
+      transition: transform 0.15s; 
+    }
+    .fc-slider-input::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    
+    .fc-description { font-size: 13.5px; line-height: 1.4; color: #555; margin-bottom: 32px; border-bottom: 1px solid #EAE8E3; padding-bottom: 32px; }
+    
+    .fc-output-num { 
+      font-size: 64px; 
+      font-weight: 700; 
+      line-height: 1; 
+      color: var(--brand-orange, #E15A27); 
+      letter-spacing: -0.02em; 
+      margin-bottom: 8px; 
+    }
+    .fc-output-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #777; text-transform: uppercase; }
+
+    /* Layout System 009: TAILORED PARTNERSHIP */
+    .partnership-header-container { width: 100%; max-width: 900px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .partnership-stack-container { width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; margin-top: 14px; }
+    .partnership-pills-row { display: flex; gap: 10px; margin-bottom: 16px; width: 100%; justify-content: center; overflow-x: auto; scrollbar-width: none; }
+    .partnership-pills-row::-webkit-scrollbar { display: none; }
+    
+    .pill-item-btn { 
+      padding: 11px 23px; 
+      border-radius: 50px; 
+      border: 1px solid #EAEAEA; 
+      background: #FDFDFD; 
+      font-size: 13.5px; 
+      font-weight: 600; 
+      color: #121212; 
+      cursor: pointer; 
+      white-space: nowrap; 
+      transition: all 0.2s ease; 
+    }
+    .pill-item-btn.is-active { 
+      background: #121212; 
+      color: #ffffff; 
+      border-color: #121212; 
+    }
+    
+    .partnership-compact-card { 
+      background: #F7F5F0; 
+      border-radius: 24px; 
+      border: 1px solid #EAE8E3; 
+      padding: 48px; 
+      display: flex; 
+      flex-direction: column; 
+      width: 100%; 
+      box-shadow: 0 4px 24px rgba(0,0,0,0.01); 
+      align-items: flex-start; /* Corrected alignment */
+      text-align: left; /* Corrected alignment */
+    }
+    .display-header-title { font-size: 26px; font-weight: 700; color: #121212; margin-bottom: 14px; line-height: 1.25; text-align: left; }
+    .display-body-para { font-size: 14.5px; line-height: 1.5; color: #444444; margin-bottom: 22px; text-align: left; }
+    
+    .display-bullet-grid { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 11px; 
+      margin-bottom: 26px; 
+      align-items: flex-start;
+      text-align: left;
+    }
+    .display-bullet { font-size: 13.5px; font-weight: 500; color: #222222; display: flex; align-items: center; gap: 10px; }
+    .display-bullet::before { content: '✓'; color: #121212; font-weight: 900; }
+    
+    .interactive-safe-zone, input, a, button { cursor: auto; }
+
+    /* -------------------------------------------------------------
+       RESPONSIVE ADAPTATIONS
+    ---------------------------------------------------------------- */
+    @media (max-width: 968px) {
+      .narrative-section { 
+        padding: 64px 24px 24px 24px; 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+        align-items: center;
+      }
+      .timeline-progress-sidebar { display: none; }
+      
+      .mobile-progress-container { display: block; }
+      
+      .corp-header { 
+        padding: 0 20px; 
+        height: 64px; 
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed; 
+        width: 100%;
+        background: transparent;
+      }
+      .corp-nav { display: none; }
+      .corp-logo { font-size: 16px; }
+      
+      .mobile-header-actions { 
+        display: flex; 
+        width: 100%; 
+        height: 100%; 
+        align-items: center; 
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 0 20px;
+        pointer-events: none;
+      }
+      .mobile-header-actions * {
+        pointer-events: auto;
+      }
+
+      .mobile-slide-counter {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        margin: 0;
+      }
+
+      .mobile-hamburger { display: flex; }
+      .mobile-menu-drawer { display: flex; }
+      
+      .bleed-split-grid { flex-direction: column-reverse; width: 100%; height: 100%; }
+      .split-text-pane { padding: 40px 24px; width: 100%; flex: 1; justify-content: center; align-items: center; text-align: center; }
+      .split-text-pane .body-lead { margin-left: auto; margin-right: auto; }
+      .split-media-pane { width: 100%; flex: 1; }
+      
+      .headline-large { font-size: 26px; margin-bottom: 16px; }
+      .eyebrow { margin-bottom: 14px; }
+      .embedded-layout-asset { max-width: 100%; height: 220px; margin-top: 16px; }
+      
+      #slide-sec-2 .headline-large {
+        font-size: 32px !important;
+      }
+
+      #slide-sec-6 .headline-large {
+        font-size: 26px !important;
+      }
+
+      .centered-narrative-inner {
+        margin: auto 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .expression-showcase-wrap { margin-top: 20px; max-width: 100%; }
+      .expression-left-graphic { display: none !important; }
+      .expression-right-details { width: 100%; text-align: left; }
+      .expression-main-card { flex-direction: column; border-radius: 0 0 12px 12px; padding: 20px; gap: 0; min-height: auto; }
+      .expression-tabs-row { display: flex; flex-wrap: nowrap; width: 100%; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+      .expression-tabs-row::-webkit-scrollbar { display: none; }
+      .tab-btn { flex: 0 0 auto; text-align: center; border-radius: 10px 10px 0 0; padding: 12px 14px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+      .expr-title { font-size: 24px; }
+      .expr-desc { font-size: 13px; margin-bottom: 16px; }
+      .expr-divider { margin-bottom: 14px; }
+      
+      .history-timeline-outer { margin-top: 20px; }
+      .history-timeline-container { padding: 10px 24px 20px 24px; gap: 16px; justify-content: flex-start; }
+      .timeline-column-card { flex: 0 0 190px; border-radius: 12px; padding: 8px; }
+      .timeline-card-image-wrapper { margin-bottom: 8px; }
+      .timeline-card-caption { font-size: 11.5px; }
+      
+      .forecasting-split-layout { flex-direction: column; gap: 24px; padding: 0; margin: auto 0; align-items: flex-start; }
+      .forecast-left-content { width: 100%; text-align: left; }
+      .forecast-left-content .headline-large { font-size: 28px; }
+      .forecast-right-card { width: 100%; padding: 20px; border-radius: 20px; text-align: left; }
+      .fc-eyebrow { margin-bottom: 16px; }
+      .fc-description { margin-bottom: 20px; padding-bottom: 20px; }
+      .fc-output-num { font-size: 48px; }
+      
+      .partnership-header-container { max-width: 100%; align-items: flex-start; text-align: left; margin-top: auto; }
+      .partnership-header-container .eyebrow { margin-bottom: 8px; }
+      .partnership-header-container .headline-large { font-size: 26px; text-align: left; margin-bottom: 8px; }
+      .partnership-header-container .body-lead { text-align: left; font-size: 14px; }
+      .partnership-stack-container { max-width: 100%; margin-top: 10px; margin-bottom: auto; align-items: flex-start; text-align: left; }
+      .partnership-pills-row { width: calc(100% + 48px); margin-left: -24px; padding: 0 24px; gap: 8px; margin-bottom: 12px; justify-content: flex-start; }
+      
+      .pill-item-btn { padding: 8px 16px; font-size: 12.5px; }
+      .partnership-compact-card { padding: 20px; border-radius: 16px; align-items: flex-start; text-align: left; }
+      .display-header-title { font-size: 18px; margin-bottom: 8px; }
+      .display-body-para { font-size: 13px; margin-bottom: 14px; line-height: 1.4; }
+      .display-bullet-grid { gap: 6px; margin-bottom: 16px; align-items: flex-start; }
+      .display-bullet { font-size: 12px; }
+      .btn-unified { width: 100%; max-width: 100%; padding: 12px 20px; font-size: 13px; text-align: center; }
+
+      .bottom-scroll-hint {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: max-content;
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APP LAYOUT STRUCTURAL INJECTIONS -->
+  <div class="mobile-progress-container">
+    <div class="mobile-progress-bar" id="mobile-progress-indicator"></div>
+  </div>
+
+  <header class="corp-header interactive-safe-zone" onclick="event.stopPropagation();">
+    <a href="https://omawild.com/" class="corp-logo" id="inject-logo"></a>
+    
+    <!-- Desktop Navigation -->
+    <nav class="corp-nav" id="inject-nav"></nav>
+    
+    <!-- Mobile Navigation Actions Grid -->
+    <div class="mobile-header-actions">
+      <!-- Centered page counter tracking (Locked absolutely in viewport center) -->
+      <span class="mobile-slide-counter" id="mobile-slide-counter">
+        <span class="active-digit">01</span> / 09
+      </span>
+      
+      <!-- Actions explicitly aligned on the right end of Header -->
+      <div class="mobile-actions-right">
+        <a href="mailto:partners@omawild.com" class="mobile-pinned-cta">Become a Partner</a>
+        <button class="mobile-hamburger" id="hamburger-btn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Dropdown/Drawer Menu -->
+  <div class="mobile-menu-drawer interactive-safe-zone" id="mobile-drawer" onclick="event.stopPropagation();">
+    <button class="drawer-close-btn" id="drawer-close-btn">
+      <span>✕</span> Close
+    </button>
+  </div>
+
+  <div class="timeline-progress-sidebar interactive-safe-zone" onclick="event.stopPropagation();">
+    <div class="timeline-dot-track" id="inject-dots"></div>
+  </div>
+
+  <div class="narrative-wrapper" id="master-scroller"></div>
+
+  <!-- RUNTIME RENDER ENGINE -->
+  <script>
+    // --- 1. GLOBAL SITE DATA OBJECT DEFINITION ---
+    const SITE_DATA = {
+      globalBrand: {
+        logoText: "Omawild",
+        logoUrl: "https://omawild.com/",
+        signatureOrange: "#E15A27",
+        navLinks: [
+          { text: "Our Blueprint", url: "https://omawild.com/pages/our-blueprint" },
+          { text: "Regenerative Agriculture", url: "https://omawild.com/pages/regenerative-agriculture" }
+        ],
+        ctaButton: { text: "Become a Partner", url: "mailto:partners@omawild.com" }
+      },
+
+      section001: {
+        bgColor: "#FFFFFF",
+        textColor: "#121212",
+        eyebrow: "Coffee for Planet Earth",
+        headline: "A healthy ecosystem begins with the coffee in your pantry",
+        body: "Specialty coffee from community agroforests on the volcanic slopes of West Java. Every cup regenerates our home.",
+        btnText: "Trace your impact ↓",
+        imageUrl: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=1200" 
+      },
+
+      section002: {
+        bgColor: "#FFFFFF",
+        textColor: "#121212",
+        eyebrow: "DRINK FOR OUR PLANET",
+        headline: "One cup of coffee is never just one cup",
+        body: "It's a choice for our future and the generations that follow.",
+        scrollHintText: "Support Planet Earth"
+      },
+
+      section003: {
+        bgColor: "#FFFFFF",
+        textColor: "#121212",
+        eyebrow: "Not all coffee is equal",
+        headline: "Our coffee begins in a forest on the volcanic slopes of West Java",
+        diagramImageUrl: "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=1200"
+      },
+
+      section004: {
+        bgColor: "#FFFFFF",
+        textColor: "#121212",
+        eyebrow: "Beyond The Bean",
+        headline: "Where growing coffee means nurturing life beyond the bean",
+        body: "Coffee is only one part of the story. Through regenerative agriculture, our farm partners grow within ecosystems where native trees, companion crops, and biodiversity work together to restore soil health, protect forests, and regenerate nature.",
+        imageUrl: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=1200" 
+      },
+
+      section005: {
+        bgColor: "#FFFFFF",
+        textColor: "#121212",
+        eyebrow: "From Forest to Cup",
+        headline: "Three expressions of one forest",
+        leadBody: "Explore three distinct expressions of West Java's volcanic terroir, shaped by careful processing and the craft of specialty roasting.",
+        scrollHintText: "How it all began",
+        cardThemeColor: "#F7F5F0", 
+        activeTabBg: "#F7F5F0",
+        activeTabText: "#121212",
+        inactiveTabBg: "#EAE8E3",
+        inactiveTabText: "#6E6D6A",
+        products: [
+          {
+            id: "fruity-floral",
+            tabLabel: "Fruity & Floral",
+            exprEyebrow: "Bright & Expressive",
+            exprTitle: "WILD BLOOM",
+            exprSub: "SPECIALTY GRADE ARABICA",
+            exprDesc: "For great conversations inspired over coffee. Bright florals and vibrant fruit create a more expressive cup that invites people to slow down and refresh.",
+            exprFooter: "Crafted for pour-over, cold brew, and nitro coffee.",
+            imageUrl: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600" 
+          },
+          {
+            id: "nutty-espresso",
+            tabLabel: "Nutty Espresso",
+            exprEyebrow: "Bold & Comforting",
+            exprTitle: "CANOPY BLEND",
+            exprSub: "DIRECT TRADE MICRO-LOT",
+            exprDesc: "A rich profile grounded in notes of roasted hazelnut, dark cacao, and toasted brown sugar. Tailored for full-bodied extractions that hold structure perfectly alongside milk pairings.",
+            exprFooter: "Crafted for espresso extraction, moka pot, and French press.",
+            imageUrl: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=600"
+          },
+          {
+            id: "wine-reserves",
+            tabLabel: "Wine Reserves",
+            exprEyebrow: "Exotic & Complex",
+            exprTitle: "VOLCANO RESERVE",
+            exprSub: "ANAEROBIC NATURAL PROCESS",
+            exprDesc: "An exceptional micro-lot underwent custom extended anaerobic fermentation. Reveals intricate fruit forward notes, black cherry compote undertones, and a velvet, wine-like clean finish.",
+            exprFooter: "Crafted for specialized pour-over, Chemex, and cold drip.",
+            imageUrl: "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?q=80&w=600"
+          }
+        ]
+      },
+
+      section006: {
+        bgColor: "#FFFFFF", 
+        textColor: "#121212",
+        eyebrow: "How It All Began",
+        headline: "Our story began in the landscapes that inspired our mission to restore nature",
+        scrollHintText: "Follow our mission",
+        timeline: [
+          {
+            caption: "Secured initial preservation agreements covering 5,000 hectares of primary ecosystems.",
+            imageUrl: "https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=400"
+          },
+          {
+            caption: "Introduced shade-grown specialty cultivars into cooperative farming matrices natively.",
+            imageUrl: "https://images.unsplash.com/photo-1500627869374-13cd993b1115?q=80&w=400"
+          },
+          {
+            caption: "Expanded active restoration tracking systems across three distinct regional ecosystems.",
+            imageUrl: "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=400"
+          },
+          {
+            caption: "Our journey began in 2023, when we left our careers in tech for a one-way ticket to permaculture.",
+            imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=400"
+          },
+          {
+            caption: "Establishing close community partnerships with local micro-lot farmers in West Java.",
+            imageUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=400"
+          },
+          {
+            caption: "Implementing strict shade-grown organic planting metrics across our cooperative networks.",
+            imageUrl: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=400"
+          },
+          {
+            caption: "Initiating community-led native tree nurseries alongside target agricultural plots.",
+            imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=400"
+          },
+          {
+            caption: "Launching interactive trace mapping protocols for direct consumer transparency.",
+            imageUrl: "https://images.unsplash.com/photo-1475113548554-5a36f1f523d6?q=80&w=400"
+          },
+          {
+            caption: "Successfully scaling our forest protection initiatives into new volcanic corridors.",
+            imageUrl: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=400"
+          },
+          {
+            caption: "Securing globally recognized certifications for cooperative clean water matrices.",
+            imageUrl: "https://images.unsplash.com/photo-1438786657495-640937046d18?q=80&w=400"
+          },
+          {
+            caption: "Welcoming corporate programs globally to direct ecosystem integration programs.",
+            imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=400"
+          }
+        ]
+      },
+
+      section007: {
+        bgColor: "#FFFFFF",
+        textColor: "#121212",
+        eyebrow: "Into The Wild",
+        headline: "Omawild is a conservation-led food brand, starting with specialty coffee.",
+        body: "Coffee is just the beginning of a bigger vision. As members of 1% for the Planet, we contribute at least one percent of all annual sales to environmental organisations restoring the places we call home.",
+        btnText: "Read our 1% pledge",
+        btnUrl: "https://omawild.com/pages/one-percent-for-the-planet",
+        scrollHintText: "Calculate impact"
+      },
+
+      section008: {
+        eyebrow: "The power of one",
+        headline: "Everyday rituals that bring us together create a force for nature.",
+        cardTitle: "See how one coffee choice, repeated across your organisation, becomes something extraordinary.",
+        metricLabel: "Team Size",
+        description: "One cup a day × five days a week × fifty-two weeks a year (across your entire organisation).",
+        outputSuffix: "opportunities to sustain our home planet",
+        scrollHintText: "Participate"
+      },
+
+      section009: {
+        eyebrow: "PARTICIPATE TOGETHER",
+        headline: "Every organisation has the power to become part of something bigger",
+        body: "What future will yours shape? ",
+        btnText: "Become a Partner",
+        solutions: [
+          {
+            id: "office-coffee",
+            pillLabel: "Coffee Program",
+            displayTitle: "The Office Coffee Ecosystem",
+            displayBody: "Transform daily institutional consumption into certified acreage preservation. We supply fully customized roasting configurations, commercial machinery maintenance infrastructure, and end-to-end trace reports mapping exact ecological metrics saved by your workplace teams.",
+            bullets: [
+              "Customized micro-lot scaling",
+              "Direct carbon offset metrics",
+              "Commercial grinder/brewer setup",
+              "Monthly transparency statements"
+            ]
+          },
+          {
+            id: "impact-gifting",
+            pillLabel: "Corporate Gifting",
+            displayTitle: "Restorative Corporate Gifting",
+            displayBody: "Craft a custom tactile statement of your organization's commitment to climate change. Our tailored gifting portfolios feature zero-waste personalized wooden packaging, single-origin natural processes, and micro-lot certifications perfect for end-of-year executive summaries.",
+            bullets: [
+              "Custom laser-etched branding",
+              "Interactive digital tracing cards",
+              "Carbon-neutral drop shipping",
+              "1% for the Planet direct contribution"
+            ]
+          },
+          {
+            id: "shared-experiences",
+            pillLabel: "Sensory Experiences",
+            displayTitle: "Agroforestry Cupping Labs",
+            displayBody: "Engage your team or high-value clients with direct sensory training. Led by certified Q-graders, this hands-on workshop dives into West Java's volcanic terroir, organic processing parameters, and interactive brewing standards designed to connect daily rituals with deep earth systems.",
+            bullets: [
+              "In-person or guided virtual labs",
+              "Terroir education booklets",
+              "Complete brewing starter-kits",
+              "Direct connection to farmers"
+            ]
+          },
+          {
+            id: "cobranded-impact",
+            pillLabel: "Co-Branded Impact",
+            displayTitle: "Co-Branded Preservation Initiatives",
+            displayBody: "Unlock large-scale environmental impact by aligning your brand's voice directly with ecosystem restoration. Through strategic co-branding campaigns, we co-fund critical agroforestry projects, providing your brand with high-fidelity, auditable marketing materials and interactive impact transparency matrices.",
+            bullets: [
+              "Auditable restoration impact metrics",
+              "Joint press and custom content assets",
+              "Direct connection to verified conservation NGOs",
+              "Exclusive co-branded packaging runs"
+            ]
+          }
+        ]
+      }
+    };
+
+    // --- 2. RUNTIME ENGINE INJECTIONS ---
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.style.setProperty('--brand-orange', SITE_DATA.globalBrand.signatureOrange);
+
+      // Setup Global Branding
+      document.getElementById('inject-logo').textContent = SITE_DATA.globalBrand.logoText;
+      const navContainer = document.getElementById('inject-nav');
+      const mobileDrawer = document.getElementById('mobile-drawer');
+
+      // Populate Navigation Links
+      SITE_DATA.globalBrand.navLinks.forEach(link => {
+        const a = document.createElement('a');
+        a.className = 'corp-nav-link';
+        a.href = link.url;
+        a.textContent = link.text;
+        navContainer.appendChild(a);
+
+        const mobA = document.createElement('a');
+        mobA.className = 'corp-nav-link';
+        mobA.style.fontSize = '18px';
+        mobA.style.fontWeight = '600';
+        mobA.href = link.url;
+        mobA.textContent = link.text;
+        mobileDrawer.appendChild(mobA);
+      });
+
+      // Desktop Primary CTA
+      const cta = document.createElement('a');
+      cta.className = 'corp-cta';
+      cta.href = SITE_DATA.globalBrand.ctaButton.url;
+      cta.textContent = SITE_DATA.globalBrand.ctaButton.text;
+      navContainer.appendChild(cta);
+
+      // Mobile Drawer CTA Duplicate
+      const mobCta = document.createElement('a');
+      mobCta.className = 'btn-unified';
+      mobCta.style.textAlign = 'center';
+      mobCta.style.marginTop = '20px';
+      mobCta.href = SITE_DATA.globalBrand.ctaButton.url;
+      mobCta.textContent = SITE_DATA.globalBrand.ctaButton.text;
+      mobileDrawer.appendChild(mobCta);
+
+      // Mobile Hamburger and Drawer Navigation Toggles
+      const hamburger = document.getElementById('hamburger-btn');
+      const drawer = document.getElementById('mobile-drawer');
+      const closeBtn = document.getElementById('drawer-close-btn');
+
+      const toggleDrawer = (forceClose = false) => {
+        if (forceClose) {
+          hamburger.classList.remove('is-active');
+          drawer.classList.remove('is-active');
+        } else {
+          hamburger.classList.toggle('is-active');
+          drawer.classList.toggle('is-active');
+        }
+      };
+
+      hamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDrawer();
+      });
+
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDrawer(true);
+      });
+
+      document.addEventListener('click', () => {
+        toggleDrawer(true);
+      });
+
+      const handleResize = () => {
+        if (window.innerWidth > 968) {
+          toggleDrawer(true);
+        }
+      };
+      window.addEventListener('resize', handleResize);
+
+      const scroller = document.getElementById('master-scroller');
+      const dotsContainer = document.getElementById('inject-dots');
+      
+      const appendDot = (idx) => {
+        const dot = document.createElement('div');
+        dot.className = `timeline-node ${idx === 0 ? 'is-current' : ''}`;
+        dot.setAttribute('data-target-index', idx);
+        dotsContainer.appendChild(dot);
+      };
+
+      // --- 001: Side-By-Side Canvas ---
+      const d1 = SITE_DATA.section001;
+      const s1 = document.createElement('section');
+      s1.className = 'narrative-section bleed-split-section is-active';
+      s1.style.padding = '0'; 
+      s1.innerHTML = `
+        <div class="bleed-split-grid" style="color: ${d1.textColor}">
+          <div class="split-text-pane">
+            <p class="fade-el eyebrow delay-1">${d1.eyebrow}</p>
+            <h1 class="fade-el headline-large delay-2">${d1.headline}</h1>
+            <p class="fade-el body-lead delay-3" style="max-width:420px; margin-bottom:32px;">${d1.body}</p>
+            <div class="fade-el delay-4 interactive-safe-zone">
+              <a class="btn-unified trace-btn" href="#">${d1.btnText}</a>
+            </div>
+          </div>
+          <div class="split-media-pane">
+            <img class="bleed-img-element" src="${d1.imageUrl}" alt="Canopy Landscape Background">
+          </div>
+        </div>
+      `;
+      
+      const actionBtn = s1.querySelector('.trace-btn');
+      actionBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const targetSection = document.querySelectorAll('.narrative-section')[1];
+        if (targetSection) targetSection.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      scroller.appendChild(s1);
+      appendDot(0);
+
+      // --- 002: Centered Minimal Statement ---
+      const d2 = SITE_DATA.section002;
+      const s2 = document.createElement('section');
+      s2.className = 'narrative-section';
+      s2.id = 'slide-sec-2';
+      s2.innerHTML = `
+        <div class="centered-narrative-inner" style="color: ${d2.textColor}; max-width: 700px;">
+          <p class="fade-el eyebrow delay-1">${d2.eyebrow}</p>
+          <h1 class="fade-el headline-large delay-2" style="margin-bottom:20px;">${d2.headline}</h1>
+          <p class="fade-el body-lead delay-3" style="font-size: 16px; line-height: 1.55;">${d2.body}</p>
+        </div>
+        <div class="bottom-scroll-hint fade-el delay-4" style="color: ${d2.textColor}">
+          <span>${d2.scrollHintText}</span>
+          <span style="color: var(--brand-orange)">↓</span>
+        </div>
+      `;
+      scroller.appendChild(s2);
+      appendDot(1);
+
+      // --- 003: Text + Embedded Central Diagram ---
+      const d3 = SITE_DATA.section003;
+      const s3 = document.createElement('section');
+      s3.className = 'narrative-section';
+      s3.innerHTML = `
+        <div class="centered-narrative-inner" style="color: ${d3.textColor}; max-width: 800px;">
+          <p class="fade-el eyebrow delay-1">${d3.eyebrow}</p>
+          <h1 class="fade-el headline-large delay-2" style="margin-bottom:12px;">${d3.headline}</h1>
+          <img class="fade-el embedded-layout-asset delay-3" src="${d3.diagramImageUrl}" alt="Eco blueprint">
+        </div>
+      `;
+      scroller.appendChild(s3);
+      appendDot(2);
+
+      // --- 004: Canopy Ecosystem Section ---
+      const d4 = SITE_DATA.section004;
+      const s4 = document.createElement('section');
+      s4.className = 'narrative-section';
+      s4.innerHTML = `
+        <div class="centered-narrative-inner" style="color: ${d4.textColor}; max-width: 800px;">
+          <p class="fade-el eyebrow delay-1">${d4.eyebrow}</p>
+          <h1 class="fade-el headline-large delay-2" style="margin-bottom: 0;">${d4.headline}</h1>
+          <img class="fade-el embedded-layout-asset delay-3" src="${d4.imageUrl}" alt="Canopy systems">
+          <p class="fade-el caption-footer-para delay-4" style="max-width: 100%;">${d4.body}</p>
+        </div>
+      `;
+      scroller.appendChild(s4);
+      appendDot(3);
+
+      // --- 005: Custom Product Expressions Tab Showcase ---
+      const d5 = SITE_DATA.section005;
+      const s5 = document.createElement('section');
+      s5.className = 'narrative-section';
+      
+      let tabsHtml = '';
+      let cardsHtml = '';
+      
+      d5.products.forEach((prod, i) => {
+        tabsHtml += `
+          <button class="tab-btn ${i === 0 ? 'is-active' : ''}" data-tab-id="${prod.id}">
+            ${prod.tabLabel}
+          </button>
+        `;
+        cardsHtml += `
+          <div id="card-${prod.id}" class="expression-main-card expression-content-panel ${i === 0 ? 'is-active' : ''}" style="display: ${i === 0 ? 'flex' : 'none'};">
+            <div class="expression-left-graphic" style="background-color: #E2DDD5;">
+              <img class="expression-prod-img" src="${prod.imageUrl}" alt="${prod.exprTitle}">
+            </div>
+            <div class="expression-right-details">
+              <span class="expr-eyebrow">${prod.exprEyebrow}</span>
+              <h2 class="expr-title">${prod.exprTitle}</h2>
+              <span class="expr-sub">${prod.exprSub}</span>
+              <p class="expr-desc">${prod.exprDesc}</p>
+              <div class="expr-divider"></div>
+              <span class="expr-footer-note">${prod.exprFooter}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      s5.innerHTML = `
+        <div class="centered-narrative-inner" style="max-width: 800px; color: ${d5.textColor};">
+          <p class="fade-el eyebrow delay-1">${d5.eyebrow}</p>
+          <h1 class="fade-el headline-large delay-2" style="max-width: 680px; margin-bottom: 12px;">${d5.headline}</h1>
+          <p class="fade-el body-lead delay-3" style="max-width: 640px; text-align:center; margin-bottom:0;">${d5.leadBody}</p>
+          
+          <div class="expression-showcase-wrap fade-el delay-4 interactive-safe-zone" onclick="event.stopPropagation();">
+            <div class="expression-tabs-row">${tabsHtml}</div>
+            <div class="expression-deck-wrapper">${cardsHtml}</div>
+          </div>
+        </div>
+        <div class="bottom-scroll-hint fade-el delay-4" style="color: ${d5.textColor}">
+          <span>${d5.scrollHintText}</span>
+          <span style="color: var(--brand-orange)">↓</span>
+        </div>
+      `;
+      scroller.appendChild(s5);
+      appendDot(4);
+
+      const styleTabs = () => {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          if (btn.classList.contains('is-active')) {
+            btn.style.backgroundColor = d5.activeTabBg;
+            btn.style.color = d5.activeTabText;
+          } else {
+            btn.style.backgroundColor = d5.inactiveTabBg;
+            btn.style.color = d5.inactiveTabText;
+          }
+        });
+      };
+      setTimeout(styleTabs, 50);
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetId = btn.getAttribute('data-tab-id');
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          document.querySelectorAll('.expression-content-panel').forEach(card => card.style.display = 'none');
+          const targetCard = document.getElementById(`card-${targetId}`);
+          if (targetCard) targetCard.style.display = 'flex';
+          styleTabs();
+        });
+      });
+
+      // --- 006: Cozy Compact Portrait Card Timeline ---
+      const d6 = SITE_DATA.section006;
+      const s6 = document.createElement('section');
+      s6.className = 'narrative-section';
+      s6.id = 'slide-sec-6';
+      s6.style.paddingLeft = '0';
+      s6.style.paddingRight = '0';
+      s6.style.justifyContent = 'center'; 
+      
+      let timelineCardsHtml = '';
+      d6.timeline.forEach((item) => {
+        timelineCardsHtml += `
+          <div class="timeline-column-card">
+            <div class="timeline-card-image-wrapper">
+              <img class="timeline-card-image" src="${item.imageUrl}" alt="Timeline Moment">
+            </div>
+            <p class="timeline-card-caption">${item.caption}</p>
+          </div>
+        `;
+      });
+
+      s6.innerHTML = `
+        <div class="centered-narrative-inner" style="max-width: 900px; color: ${d6.textColor}; padding: 0 40px; margin: 0 auto;">
+          <p class="fade-el eyebrow delay-1" style="margin-bottom: 24px;">${d6.eyebrow}</p>
+          <h1 class="fade-el headline-large delay-2" style="max-width: 100%; margin-bottom: 0;">${d6.headline}</h1>
+          
+          <div class="history-timeline-outer">
+            <div class="history-timeline-container fade-el delay-3 interactive-safe-zone" onclick="event.stopPropagation();" style="padding-left: 0; padding-right: 0;">
+              ${timelineCardsHtml}
+            </div>
+          </div>
+        </div>
+        <div class="bottom-scroll-hint fade-el delay-4" style="color: ${d6.textColor}">
+          <span>${d6.scrollHintText}</span>
+          <span style="color: var(--brand-orange)">↓</span>
+        </div>
+      `;
+      scroller.appendChild(s6);
+      appendDot(5);
+
+      // --- 007: Conservation Pledge Call To Action ---
+      const d7 = SITE_DATA.section007;
+      const s7 = document.createElement('section');
+      s7.className = 'narrative-section';
+      s7.innerHTML = `
+        <div class="centered-narrative-inner slide-seven-width" style="color: ${d7.textColor}">
+          <p class="fade-el eyebrow delay-1">${d7.eyebrow}</p>
+          <h1 class="fade-el headline-large delay-2" style="max-width: 100%; margin-bottom: 18px;">${d7.headline}</h1>
+          <p class="fade-el body-lead delay-3" style="max-width: 100%; text-align: center; margin-bottom: 36px;">${d7.body}</p>
+          <div class="fade-el delay-4 interactive-safe-zone">
+            <a class="btn-unified" href="${d7.btnUrl}">${d7.btnText}</a>
+          </div>
+        </div>
+        <div class="bottom-scroll-hint fade-el delay-4" style="color: ${d7.textColor}">
+          <span>${d7.scrollHintText}</span>
+          <span style="color: var(--brand-orange)">↓</span>
+        </div>
+      `;
+      scroller.appendChild(s7);
+      appendDot(6);
+
+      // --- 008: Active Forecasting Section ---
+      const d8 = SITE_DATA.section008;
+      const s8 = document.createElement('section');
+      s8.className = 'narrative-section';
+      s8.innerHTML = `
+        <div class="forecasting-split-layout">
+          <div class="forecast-left-content">
+            <p class="fade-el eyebrow delay-1">${d8.eyebrow}</p>
+            <h1 class="fade-el headline-large delay-2">${d8.headline}</h1>
+          </div>
+          <div class="forecast-right-card fade-el delay-3 interactive-safe-zone" onclick="event.stopPropagation();">
+            <span class="fc-eyebrow" style="line-height: 1.35; display: block; margin-bottom: 20px;">${d8.cardTitle}</span>
+            <div class="fc-row">
+              <span class="fc-label">${d8.metricLabel}</span>
+              <span class="fc-value" id="calc-employee-val">100 employees</span>
+            </div>
+            <input type="range" min="0" max="1000" value="100" class="fc-slider-input" id="forecast-slider">
+            <p class="fc-description">${d8.description}</p>
+            <div class="fc-output-num" id="calc-output-metric">26,000</div>
+            <span class="fc-output-label">${d8.outputSuffix}</span>
+          </div>
+        </div>
+        <div class="bottom-scroll-hint fade-el delay-4" style="color: #121212">
+          <span>${d8.scrollHintText}</span>
+          <span style="color: var(--brand-orange)">↓</span>
+        </div>
+      `;
+      scroller.appendChild(s8);
+      appendDot(7);
+
+      const slider = s8.querySelector('#forecast-slider');
+      const labelVal = s8.querySelector('#calc-employee-val');
+      const metricVal = s8.querySelector('#calc-output-metric');
+      
+      slider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        if (val === 1000) {
+          labelVal.textContent = "1000+ employees";
+        } else {
+          labelVal.textContent = `${val} employees`;
+        }
+        const computedImpact = val * 260; // Each employee drinking one cup/day, 5 days/wk, 52 wks/yr equals 260 opportunities per year.
+        metricVal.textContent = computedImpact.toLocaleString();
+      });
+
+      // Fire once to set initial state correctly
+      slider.dispatchEvent(new Event('input'));
+
+      // --- 009: Tailored Partnerships UI ---
+      const d9 = SITE_DATA.section009;
+      const s9 = document.createElement('section');
+      s9.className = 'narrative-section';
+      
+      let leftMenuHtml = '';
+      d9.solutions.forEach((sol, index) => {
+        leftMenuHtml += `
+          <button class="pill-item-btn ${index === 0 ? 'is-active' : ''}" data-sol-id="${sol.id}">
+            ${sol.pillLabel}
+          </button>
+        `;
+      });
+
+      s9.innerHTML = `
+        <div class="partnership-header-container">
+          <p class="fade-el eyebrow delay-1">${d9.eyebrow}</p>
+          <h1 class="fade-el headline-large delay-2" style="margin-bottom: 12px; font-weight: 800; font-size: 38px;">${d9.headline}</h1>
+          <p class="fade-el body-lead delay-3" style="font-size: 15px; margin-bottom: 14px;">${d9.body}</p>
+        </div>
+        
+        <div class="partnership-stack-container fade-el delay-3 interactive-safe-zone" onclick="event.stopPropagation();">
+          <div class="partnership-pills-row">
+            ${leftMenuHtml}
+          </div>
+          
+          <div class="partnership-compact-card" id="partnership-view-pane"></div>
+        </div>
+      `;
+      scroller.appendChild(s9);
+      appendDot(8);
+
+      const renderActiveSolution = (solId) => {
+        const sol = d9.solutions.find(item => item.id === solId);
+        const pane = document.getElementById('partnership-view-pane');
+        if (!sol || !pane) return;
+
+        let bulletLines = '';
+        sol.bullets.forEach(bullet => {
+          bulletLines += `<div class="display-bullet">${bullet}</div>`;
+        });
+
+        pane.innerHTML = `
+          <div style="width: 100%; text-align: left; display: flex; flex-direction: column; align-items: flex-start;">
+            <h2 class="display-header-title">${sol.displayTitle}</h2>
+            <p class="display-body-para">${sol.displayBody}</p>
+            <div class="display-bullet-grid">
+              ${bulletLines}
+            </div>
+            <a class="btn-unified" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; max-width: fit-content;" href="mailto:partners@omawild.com">${d9.btnText}</a>
+          </div>
+        `;
+      };
+
+      renderActiveSolution(d9.solutions[0].id);
+
+      document.querySelectorAll('.pill-item-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetId = btn.getAttribute('data-sol-id');
+          document.querySelectorAll('.pill-item-btn').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          renderActiveSolution(targetId);
+        });
+      });
+
+      // Narrative Scroll Engine Bindings
+      const wrapper = document.querySelector('.narrative-wrapper');
+      const sections = document.querySelectorAll('.narrative-section');
+      const timelineNodes = document.querySelectorAll('.timeline-node');
+
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            sections.forEach(s => s.classList.remove('is-active'));
+            entry.target.classList.add('is-active');
+            const cIdx = Array.from(sections).indexOf(entry.target);
+            
+            // Update Desktop Dots Tracker
+            timelineNodes.forEach((n, idx) => n.classList.toggle('is-current', idx === cIdx));
+            
+            // Update Mobile Progress Bar
+            const progressPercent = ((cIdx + 1) / sections.length) * 100;
+            const mobProgressBar = document.getElementById('mobile-progress-indicator');
+            if (mobProgressBar) {
+              mobProgressBar.style.width = `${progressPercent}%`;
+            }
+
+            // Update Mobile Header Centered Counter
+            const mobCounter = document.getElementById('mobile-slide-counter');
+            if (mobCounter) {
+              const slideNum = String(cIdx + 1).padStart(2, '0');
+              const totalSlides = String(sections.length).padStart(2, '0');
+              mobCounter.innerHTML = `<span class="active-digit">${slideNum}</span> / ${totalSlides}`;
+            }
+          }
+        });
+      }, { root: wrapper, threshold: 0.55 });
+      sections.forEach(sec => sectionObserver.observe(sec));
+
+      timelineNodes.forEach(node => {
+        node.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(node.getAttribute('data-target-index'));
+          if (sections[idx]) sections[idx].scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      sections.forEach((section, index) => {
+        section.addEventListener('click', (e) => {
+          if (e.target.closest('.interactive-safe-zone') || e.target.closest('input') || e.target.closest('a') || e.target.closest('button')) return;
+          if (sections[index + 1]) sections[index + 1].scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
